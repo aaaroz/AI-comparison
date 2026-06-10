@@ -78,13 +78,13 @@ export default async function BenchmarksPage() {
 
     const geminiAvg = Math.round(
       rows.reduce(
-        (acc, r) => acc + (((r as any)[geminiField] as number) ?? 0),
+        (acc, r) => acc + (((r as any)[geminiField as string] as number) ?? 0),
         0
       ) / total
     )
     const alibabaAvg = Math.round(
       rows.reduce(
-        (acc, r) => acc + (((r as any)[alibabaField] as number) ?? 0),
+        (acc, r) => acc + (((r as any)[alibabaField as string] as number) ?? 0),
         0
       ) / total
     )
