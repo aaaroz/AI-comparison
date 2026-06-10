@@ -1,0 +1,33 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model BenchmarkResult {
+  id        String   @id
+  prompt    String
+  winner    String
+  createdAt DateTime @default(now())
+
+  geminiResponse            String
+  geminiTaskCompletion      Int
+  geminiResponseQuality     Int
+  geminiInstructionFollowing Int
+  geminiTravelKnowledge     Int
+  geminiHallucinationRisk   Int
+  geminiPracticality        Int
+  geminiOverallScore        Int
+
+  alibabaResponse           String
+  alibabaTaskCompletion     Int
+  alibabaResponseQuality    Int
+  alibabaInstructionFollowing Int
+  alibabaTravelKnowledge    Int
+  alibabaHallucinationRisk  Int
+  alibabaPracticality       Int
+  alibabaOverallScore       Int
+}
