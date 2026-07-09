@@ -58,7 +58,17 @@ function extractFromOutput(anyRes: any) {
 }
 
 export const alibaba = {
-  async generateContent({ model, contents, temperature = 0.7 }: { model: string; contents: string; temperature?: number }) {
+  async generateContent({
+    model,
+    contents,
+    temperature = 0.7,
+    googleSearch = false,
+  }: {
+    model: string
+    contents: string
+    temperature?: number
+    googleSearch?: boolean
+  }) {
     if (!process.env.ALIBABA_API_URL || !process.env.ALIBABA_API_KEY) {
       throw new Error("ALIBABA_API_URL or ALIBABA_API_KEY not configured")
     }
@@ -69,7 +79,13 @@ export const alibaba = {
       max_completion_tokens: 3000,
       messages: [{ role: "user", content: contents }],
       temperature,
-    })
+      ...(googleSearch
+        ? {
+            web_search_options: { search_context_size: "medium" },
+            extra_body: { enable_search: true },
+          }
+        : {}),
+    } as any)
 
     const anyRes: any = res
 

@@ -1,16 +1,21 @@
 import { gemini } from "./gemini"
 import { alibaba } from "./alibaba"
 
-export async function generateTravelPlan(prompt: string) {
-  const result = await gemini.models.generateContent({
-    model: "gemini-2.5-flash",
-
-    contents: `
+const travelAssistantPrompt = (prompt: string) => `
 You are an AI Travel Assistant.
+
+Use Google Search grounding for current prices, schedules, opening hours, weather, safety notes, and travel rules.
+Prefer current source-backed facts over memory. Include source names or links for time-sensitive claims.
 
 User Request:
 ${prompt}
-`,
+`
+
+export async function generateTravelPlan(prompt: string) {
+  const result = await gemini.models.generateContent({
+    model: "gemini-2.5-flash",
+    config: { tools: [{ googleSearch: {} }] },
+    contents: travelAssistantPrompt(prompt),
   })
 
   return result.text ?? ""
@@ -19,13 +24,8 @@ ${prompt}
 export async function generateTravelPlanAlibaba(prompt: string) {
   const result = await alibaba.generateContent({
     model: "qwen3.6-flash",
-
-    contents: `
-You are an AI Travel Assistant.
-
-User Request:
-${prompt}
-`,
+    googleSearch: true,
+    contents: travelAssistantPrompt(prompt),
   })
 
   return { text: result.text ?? "", raw: result.raw }
